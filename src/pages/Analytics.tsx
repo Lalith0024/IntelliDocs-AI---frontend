@@ -119,7 +119,7 @@ export const Analytics = () => {
                 <Clock className="w-6 h-6" />
               </div>
               <div>
-                <span className="text-[10px] uppercase font-bold text-slate-400 tracking-[0.1em]">Avg Latency</span>
+                <span className="text-[10px] uppercase font-bold text-slate-400 tracking-[0.1em]">Avg Speed</span>
                 <div className="text-3xl font-black text-slate-900 mt-1">
                   {stats.avg_latency_ms}ms
                 </div>
@@ -139,7 +139,7 @@ export const Analytics = () => {
                 <Target className="w-6 h-6" />
               </div>
               <div>
-                <span className="text-[10px] uppercase font-bold text-slate-400 tracking-[0.1em]">Success Rate</span>
+                <span className="text-[10px] uppercase font-bold text-slate-400 tracking-[0.1em]">Answer Rate</span>
                 <div className="text-3xl font-black text-slate-900 mt-1">
                   {stats.success_rate}%
                 </div>
@@ -155,7 +155,7 @@ export const Analytics = () => {
             {/* Pie Chart */}
             <div className="lg:col-span-1 p-8 bg-white border border-slate-200 shadow-sm rounded-[40px] flex flex-col items-center">
               <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest self-start mb-8 text-center w-full">
-                Confidence Distribution
+                Reliability Breakdown
               </h3>
               {hasConfidenceData ? (
                 <>

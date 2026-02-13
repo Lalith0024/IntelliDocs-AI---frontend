@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileText, ChevronRight, ChevronDown, Eye, Hash, ShieldCheck, ShieldX } from 'lucide-react';
+import { FileText, ChevronRight, ChevronDown, Eye } from 'lucide-react';
 import type { Source } from '../types/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../utils/cn';
@@ -13,60 +13,51 @@ export const SourceCard = ({ source, index }: SourceCardProps) => {
   const [isExpanded, setIsExpanded] = useState(index === 0);
 
   const confidenceColor = {
-    high: 'text-emerald-600',
-    medium: 'text-amber-600',
-    low: 'text-rose-500',
-  }[source.confidence] || 'text-slate-400';
-
-  const scorePercent = Math.round(source.score * 100);
+    high: 'text-emerald-600 bg-emerald-50 border-emerald-100',
+    medium: 'text-amber-600 bg-amber-50 border-amber-100',
+    low: 'text-rose-500 bg-rose-50 border-rose-100',
+  }[source.confidence] || 'text-slate-400 bg-slate-50 border-slate-100';
 
   return (
-    <div className={cn(
-      "source-item overflow-hidden transition-slow",
-      isExpanded ? "ring-2 ring-blue-500/10 shadow-md" : "shadow-sm"
-    )}>
+    <motion.div
+      layout
+      className={cn(
+        "group overflow-hidden transition-all duration-300 rounded-xl border",
+        isExpanded ? "bg-white border-blue-200 shadow-lg shadow-blue-500/5 ring-1 ring-blue-500/10" : "bg-white border-slate-200 hover:border-blue-300 hover:shadow-sm"
+      )}
+    >
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full text-left p-6 flex items-start justify-between gap-6"
+        className="w-full text-left p-4 flex items-start gap-4 transition-colors"
       >
-        <div className="flex gap-6">
-          <div className={cn(
-            "w-12 h-12 rounded-xl flex items-center justify-center transition-slow",
-            isExpanded ? "bg-black text-white" : "bg-slate-100 text-slate-400 group-hover:bg-slate-200"
-          )}>
-            <FileText className="w-6 h-6" />
-          </div>
-          <div className="pt-0.5">
+        <div className={cn(
+          "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors",
+          isExpanded ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-400 group-hover:bg-slate-200"
+        )}>
+          <FileText className="w-5 h-5" />
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-4">
             <h4 className={cn(
-              "text-lg font-bold transition-colors",
+              "text-sm font-bold truncate transition-colors",
               isExpanded ? "text-slate-900" : "text-slate-700"
             )}>
               {source.filename}
             </h4>
-            <div className="flex items-center gap-4 mt-2 flex-wrap">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                <Hash className="w-3 h-3" /> Score: {scorePercent}%
-              </span>
-              <div className="h-3 w-[1px] bg-slate-200" />
-              <span className={cn("text-[10px] font-bold uppercase tracking-widest", confidenceColor)}>
-                {source.confidence} confidence
-              </span>
-              <div className="h-3 w-[1px] bg-slate-200" />
-              {source.passed_threshold ? (
-                <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest flex items-center gap-1">
-                  <ShieldCheck className="w-3 h-3" /> Passed Threshold
-                </span>
-              ) : (
-                <span className="text-[10px] font-bold text-rose-500 uppercase tracking-widest flex items-center gap-1">
-                  <ShieldX className="w-3 h-3" /> Below Threshold
-                </span>
-              )}
-            </div>
+            {isExpanded ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
           </div>
-        </div>
 
-        <div className="mt-2 text-slate-400">
-          {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          <div className="flex items-center gap-3 mt-1.5">
+            <span className={cn("px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest border", confidenceColor)}>
+              {source.confidence} Match
+            </span>
+            {!source.passed_threshold && (
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                Low Relevance
+              </span>
+            )}
+          </div>
         </div>
       </button>
 
@@ -76,36 +67,23 @@ export const SourceCard = ({ source, index }: SourceCardProps) => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="px-6 pb-6 pt-0 ml-18">
-              <div className="p-5 bg-slate-50 border border-slate-200/60 rounded-2xl space-y-4">
-                <div className="space-y-1">
-                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <Eye className="w-3 h-3" /> Source File Content
-                  </span>
-                  <pre className="text-slate-600 leading-relaxed text-sm font-medium whitespace-pre-wrap font-sans max-h-60 overflow-y-auto">
-                    {source.content}
-                  </pre>
+            <div className="px-4 pb-4 pt-0 pl-18">
+              <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-100 space-y-3">
+                <div className="flex items-center gap-2 text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">
+                  <Eye className="w-3 h-3" /> Excerpt Content
                 </div>
-
-                <div className="flex items-center justify-between pt-4 border-t border-slate-200/60">
-                  <div className="flex items-center gap-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    <span>Similarity: {source.score.toFixed(4)}</span>
-                    <div className={cn(
-                      "w-1.5 h-1.5 rounded-full",
-                      source.passed_threshold ? "bg-emerald-500" : "bg-rose-500"
-                    )} />
-                    <span className={source.passed_threshold ? "text-emerald-600" : "text-rose-500"}>
-                      {source.passed_threshold ? "Verified Match" : "Weak Match"}
-                    </span>
-                  </div>
+                <div className="prose prose-sm max-w-none">
+                  <p className="text-slate-600 text-xs leading-relaxed font-medium font-mono whitespace-pre-wrap">
+                    {source.content}
+                  </p>
                 </div>
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };

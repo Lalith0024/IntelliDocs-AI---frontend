@@ -78,7 +78,7 @@ export const Files = () => {
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2 text-slate-400">
               <Database className="w-5 h-5" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Knowledge Base</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Document Library</span>
             </div>
             <div className="flex items-center gap-4">
               <h2 className="text-4xl font-black text-slate-900 tracking-tight">Source Documents</h2>
@@ -125,7 +125,7 @@ export const Files = () => {
         <div className="space-y-6">
           <div className="flex items-center justify-between px-2">
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2">
-              <FileText className="w-4 h-4 text-slate-400" /> Source Evidence Files
+              <FileText className="w-4 h-4 text-slate-400" /> Uploaded Documents
             </h3>
             <div className="flex items-center gap-4 bg-white px-4 py-2 rounded-2xl border border-slate-200">
               <span className="text-[10px] font-bold text-slate-900 uppercase tracking-widest">
