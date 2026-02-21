@@ -34,6 +34,8 @@ const AnimatedRoutes = () => {
           <Route path="/" element={<Home />} />
           <Route path="/files" element={<Files />} />
           <Route path="/analytics" element={<Analytics />} />
+          {/* Catch-all: redirect unknown routes to home */}
+          <Route path="*" element={<Home />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
