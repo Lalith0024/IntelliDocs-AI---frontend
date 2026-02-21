@@ -7,7 +7,7 @@ import { DashboardSkeleton } from '../components/LoadingSkeleton';
 import { queryService } from '../services/api';
 import type { QueryResponse } from '../types/api';
 import { Link } from 'react-router-dom';
-import { Database, Sparkles, ArrowRight, MessageCircleQuestion } from 'lucide-react';
+import { Database, Sparkles, ArrowRight, MessageCircleQuestion, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../utils/cn';
 
@@ -87,6 +87,32 @@ export const Home = () => {
             </div>
           </div>
         </div>
+
+        {/* Error State */}
+        <AnimatePresence>
+          {mutation.isError && !mutation.isPending && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="max-w-4xl mx-auto pt-4"
+            >
+              <div className="p-6 bg-rose-50 border border-rose-200 rounded-3xl flex items-start gap-4 shadow-sm">
+                <AlertTriangle className="w-6 h-6 text-rose-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="text-sm font-bold text-rose-800 uppercase tracking-widest mb-1">Search Failed</h4>
+                  <p className="text-sm text-rose-700 font-medium">
+                    We couldn't connect to the backend or an error occurred.
+                    <br />
+                    <span className="opacity-80">
+                      Error: {mutation.error instanceof Error ? mutation.error.message : 'Unknown Error'}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Suggested Questions Grid */}
         <AnimatePresence>

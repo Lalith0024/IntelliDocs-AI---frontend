@@ -7,7 +7,7 @@ import type {
   StatsResponse,
 } from '../types/api';
 
-export let API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+export let API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://intellidocs-backend.onrender.com' : 'http://localhost:8000');
 
 // Sanitize: Remove trailing slash and ensure protocol
 if (API_URL.endsWith('/')) {
