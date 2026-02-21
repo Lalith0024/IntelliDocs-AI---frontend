@@ -1,6 +1,7 @@
 # IntelliDocs AI - Frontend
+Backend repo: https://github.com/Lalith0024/IntelliDocs-AI---Backend
 
-An intelligent document analysis platform built with React, Vite, and Tailwind CSS.
+**An intelligent document analysis platform built with React, Vite, and Tailwind CSS.**
 
 ## 🚀 Features
 
