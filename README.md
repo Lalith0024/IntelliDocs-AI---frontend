@@ -40,3 +40,9 @@ An intelligent document analysis platform built with React, Vite, and Tailwind C
 ## 🌐 Deployment
 
 This project is optimized for deployment on **Vercel**. Ensure the "Framework Preset" is set to "Vite" and the "Root Directory" matches your repository structure.
+
+<img width="1512" height="982" alt="image" src="https://github.com/user-attachments/assets/c1e263d0-01d5-4861-ac17-89669cc6480f" />
+
+
+<img width="1512" height="982" alt="image" src="https://github.com/user-attachments/assets/125e38af-d214-473f-87ea-e32353b785a3" />
+
