@@ -1,58 +1,93 @@
 import axios from 'axios';
-import type {
-  QueryRequest,
-  QueryResponse,
-  FilesResponse,
-  FileContentResponse,
-  StatsResponse,
-} from '../types/api';
 
-export let API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://intellidocs-backend.onrender.com' : 'http://localhost:8000');
+export let API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-// Sanitize: Remove trailing slash and ensure protocol
 if (API_URL.endsWith('/')) {
   API_URL = API_URL.slice(0, -1);
 }
 
-// Security: Log the active endpoint so user can verify if Vercel baked it in correctly
-console.log('📡 Intelligence Engine connected to:', API_URL);
-
-const api = axios.create({
+export const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 30000, // 30s timeout for LLM calls
+  timeout: 30000,
 });
 
-export const queryService = {
-  /** Send a question to the backend pipeline */
-  performQuery: async (params: QueryRequest): Promise<QueryResponse> => {
-    const response = await api.post<QueryResponse>('/api/query', params);
+// Inject token into every request automatically
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export const authService = {
+  login: async (email: string, password: string) => {
+    const formData = new URLSearchParams();
+    formData.append('username', email); // OAuth2 expects 'username'
+    formData.append('password', password);
+    const response = await api.post('/api/auth/token', formData, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
     return response.data;
   },
+  signup: async (email: string, password: string) => {
+    const response = await api.post('/api/auth/signup', { email, password });
+    return response.data;
+  },
+  me: async () => {
+    const response = await api.get('/api/auth/me');
+    return response.data;
+  }
+};
+
+export const chatService = {
+  getChats: async () => {
+    const response = await api.get('/api/chats/');
+    return response.data;
+  },
+  getChat: async (id: string) => {
+    const response = await api.get(`/api/chats/${id}`);
+    return response.data;
+  },
+  query: async (question: string, chatId?: string) => {
+    const response = await api.post('/api/chats/query', {
+      question,
+      chat_id: chatId || null
+    });
+    return response.data;
+  },
+  renameChat: async (chatId: string, title: string) => {
+    const response = await api.put(`/api/chats/${chatId}/rename`, { title });
+    return response.data;
+  },
+  deleteChat: async (chatId: string) => {
+    const response = await api.delete(`/api/chats/${chatId}`);
+    return response.data;
+  }
 };
 
 export const filesService = {
-  /** List all source .txt files from the backend data directory */
-  listFiles: async (): Promise<FilesResponse> => {
-    const response = await api.get<FilesResponse>('/api/files');
-    return response.data;
+  listFiles: async () => {
+    const response = await api.get('/api/documents/');
+    return response.data; // List of DocumentObjects
   },
-
-  /** Get full content of a specific source file */
-  getFileContent: async (filename: string): Promise<FileContentResponse> => {
-    const response = await api.get<FileContentResponse>(
-      `/api/files/${encodeURIComponent(filename)}`
-    );
-    return response.data;
+  uploadFiles: async (files: File[]) => {
+    // We upload one by one in parallel or sequence
+    const uploads = files.map(file => {
+      const formData = new FormData();
+      formData.append('file', file);
+      return api.post('/api/documents/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+    });
+    const results = await Promise.all(uploads);
+    return results.map(r => r.data);
   },
-};
-
-export const statsService = {
-  /** Get query analytics / stats */
-  getStats: async (): Promise<StatsResponse> => {
-    const response = await api.get<StatsResponse>('/api/stats');
+  deleteFile: async (id: string) => {
+    const response = await api.delete(`/api/documents/${id}`);
     return response.data;
-  },
+  }
 };

@@ -11,15 +11,10 @@ export interface QueryRequest {
 }
 
 export interface QueryResponse {
-  success: boolean;
-  question: string;
+  chat_id: string;
   answer: string;
-  confidence: 'high' | 'medium' | 'low';
-  similarity_threshold: number;
-  retrieval_time_ms: number;
-  retrieval_count: number;
   valid_count: number;
-  retrieved_documents: Source[];
+  docs: Source[];
 }
 
 export interface SearchHistoryItem {

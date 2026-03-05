@@ -1,119 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-display: 'Outfit', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-serif: 'Instrument Serif', serif;
 
-  /* Refined Light Palette */
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
+  /* Gemini 3.0 Inspired Palette */
+  --color-gemini-bg: #ffffff;
+  --color-gemini-surface: #f8f9fa;
+  --color-gemini-accent: #1a73e8;
+  --color-gemini-text-primary: #1f1f1f;
+  --color-gemini-text-secondary: #5f6368;
 
-  --color-slate-50: #f8fafc;
-  --color-slate-100: #f1f5f9;
-  --color-slate-200: #e2e8f0;
-  --color-slate-900: #0f172a;
-  --color-slate-950: #020617;
-
-  --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.04), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
-  --shadow-glow: 0 0 40px -10px rgba(59, 130, 246, 0.1);
+  --shadow-subtle: 0 1px 2px 0 rgba(60, 64, 67, .3), 0 1px 3px 1px rgba(60, 64, 67, .15);
+  --shadow-premium: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 @layer base {
   :root {
     font-family: var(--font-sans);
     line-height: 1.6;
-    font-weight: 400;
-    color-scheme: light;
+    background-color: #ffffff;
+    color: #1f1f1f;
+    -webkit-font-smoothing: antialiased;
   }
 
   body {
     margin: 0;
-    min-width: 320px;
-    min-height: 100vh;
-    @apply bg-slate-50/50 text-slate-800 antialiased selection:bg-blue-500/20;
-    background-image: 
-      radial-gradient(at 0% 0%, rgba(226, 232, 240, 0.3) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(226, 232, 240, 0.3) 0px, transparent 50%);
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
+    @apply bg-white text-[#1f1f1f] overflow-hidden;
   }
 }
 
-/* Premium Component Classes - Light Theme */
-.glass-panel {
-  @apply bg-white/70 backdrop-blur-xl border border-slate-200/60 rounded-3xl shadow-soft;
+/* Cinematic Mesh Gradient Background - Subtle & High-End */
+.bg-gemini-mesh {
+  background:
+    radial-gradient(at 0% 0%, rgba(26, 115, 232, 0.03) 0, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(52, 168, 83, 0.02) 0, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(251, 188, 4, 0.02) 0, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(234, 67, 53, 0.02) 0, transparent 50%);
+  background-color: #ffffff;
 }
 
-.answer-card {
-  @apply bg-white border border-slate-200/50 rounded-[2.5rem] shadow-premium relative overflow-hidden;
+/* Staggered Fade-in Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.answer-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  @apply bg-gradient-to-b from-blue-500 to-indigo-500;
+.animate-fade-in {
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.source-item {
-  @apply bg-white border border-slate-100 hover:border-blue-400/50 hover:bg-slate-50/50 transition-all duration-300 rounded-2xl shadow-sm;
+/* Prose Styling - Minimal & Clean */
+.prose-gemini {
+  @apply text-[16px] leading-[1.7] text-[#1f1f1f];
 }
 
-/* Typography Enhancements */
-.heading-display {
-  @apply text-5xl lg:text-7xl font-bold tracking-tight text-slate-900 font-display;
-  background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.prose-gemini p {
+  @apply mb-5;
 }
 
-/* Smooth Transitions */
-.transition-slow {
-  transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+.prose-gemini strong {
+  @apply font-semibold text-[#000];
 }
 
-/* Custom Scrollbar */
+.prose-gemini ul {
+  @apply list-disc pl-5 mb-5 space-y-2;
+}
+
+.prose-gemini code {
+  @apply bg-[#f1f3f4] px-1.5 py-0.5 rounded text-[14px] font-mono text-[#1a73e8];
+}
+
+/* Minimal Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-slate-50;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors border-2 border-slate-50;
-}
-/* Manual Markdown Styling */
-.prose-custom strong {
-  font-weight: 700;
-  color: #0f172a;
-  background-color: rgba(239, 246, 255, 0.5);
-  padding: 0 4px;
-  border-radius: 4px;
+  background: #e8eaed;
+  border-radius: 10px;
 }
 
-.prose-custom ul {
-  list-style-type: disc;
-  padding-left: 1.25rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+::-webkit-scrollbar-thumb:hover {
+  background: #dadce0;
+}
+/* High-End Global Selection Branding */
+::selection {
+  background-color: rgba(26, 115, 232, 0.15);
+  color: #1a73e8;
 }
 
-.prose-custom li {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-  color: #334155;
-}
-
-.prose-custom p {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+/* Ensure Gradient Text Stays Visible During Selection */
+[class*='bg-clip-text']::selection {
+  background-color: rgba(26, 115, 232, 0.1);
+  -webkit-text-fill-color: #1a73e8;
 }

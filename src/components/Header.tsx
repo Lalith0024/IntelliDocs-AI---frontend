@@ -1,12 +1,14 @@
-import { Search, FileText, PieChart, Settings, Menu } from 'lucide-react';
+import { Search, FileText, LogOut } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { cn } from '../utils/cn';
+import { useAuth } from '../context/AuthContext';
 
 export const Header = () => {
+  const { user, logout } = useAuth();
+
   const navItems = [
     { icon: Search, label: 'Search', to: '/' },
     { icon: FileText, label: 'Documents', to: '/files' },
-    { icon: PieChart, label: 'Analytics', to: '/analytics' },
   ];
 
   return (
@@ -47,27 +49,24 @@ export const Header = () => {
 
       {/* User Actions */}
       <div className="flex items-center gap-6">
-        <button className="p-2.5 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 transition-all group relative">
-          <Settings className="w-5 h-5 group-hover:rotate-90 transition-transform duration-700" />
-        </button>
-
         <div className="h-6 w-[1px] bg-slate-200 hidden sm:block" />
 
         <div className="flex items-center gap-4">
           <div className="flex flex-col text-right hidden lg:block">
-            <div className="text-[11px] font-bold text-slate-900">Kasula Lalithendra</div>
-            <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Administrator</div>
+            <div className="text-[11px] font-bold text-slate-900">{user?.email || 'Guest'}</div>
+            <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">User</div>
           </div>
-          <div className="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center text-[11px] font-black shadow-lg shadow-slate-900/20 ring-4 ring-white cursor-pointer hover:scale-110 transition-transform overflow-hidden relative group">
-            KL
-            <div className="absolute inset-0 bg-blue-600 opacity-0 group-hover:opacity-20 transition-opacity" />
+          <div className="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center text-[11px] font-black shadow-lg shadow-slate-900/20 ring-4 ring-white cursor-help relative group">
+            {user?.email?.[0].toUpperCase() || 'U'}
           </div>
+          <button
+            onClick={logout}
+            className="p-2.5 ml-2 hover:bg-rose-50 rounded-full text-slate-400 hover:text-rose-600 transition-all title='Log Out'"
+          >
+            <LogOut className="w-5 h-5" />
+          </button>
         </div>
 
-        {/* Mobile Menu Button (Hidden on Desktop) */}
-        <button className="md:hidden p-2 text-slate-600">
-          <Menu className="w-6 h-6" />
-        </button>
       </div>
     </header>
   );

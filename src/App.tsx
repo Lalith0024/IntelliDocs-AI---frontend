@@ -1,59 +1,64 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { Files } from './pages/Files';
-import { Analytics } from './pages/Analytics';
-import { Header } from './components/Header';
-import { Footer } from './components/Footer';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Login } from './pages/Login';
+import { Sidebar } from './components/Sidebar';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { ErrorProvider } from './context/ErrorContext';
+import { Loader2 } from 'lucide-react';
 import './App.css';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      retry: 1,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
-const AnimatedRoutes = () => {
-  const location = useLocation();
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+const AppContent = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) return null;
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={location.pathname}
-        initial={{ opacity: 0, x: 10 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -10 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="flex-1"
-      >
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Home />} />
-          <Route path="/files" element={<Files />} />
-          <Route path="/analytics" element={<Analytics />} />
-          {/* Catch-all: redirect unknown routes to home */}
-          <Route path="*" element={<Home />} />
+    <div className="flex h-screen bg-white overflow-hidden text-slate-900 font-sans">
+      {user && <Sidebar />}
+      <main className="flex-1 flex flex-col h-full overflow-hidden absolute inset-0 sm:relative">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+          <Route path="/files" element={<ProtectedRoute><Files /></ProtectedRoute>} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </motion.div>
-    </AnimatePresence>
+      </main>
+    </div>
   );
-};
+}
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <div className="min-h-screen bg-[#fafbfc] flex flex-col selection:bg-blue-100">
-          <Header />
-          <main className="flex-1 pt-16 flex flex-col">
-            <AnimatedRoutes />
-          </main>
-          <Footer />
-        </div>
-      </BrowserRouter>
+      <ErrorProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <AppContent />
+          </BrowserRouter>
+        </AuthProvider>
+      </ErrorProvider>
     </QueryClientProvider>
   );
 }
