@@ -16,12 +16,12 @@ export const Sidebar = () => {
   const location = useLocation();
   const currentChatId = new URLSearchParams(location.search).get('chat');
 
-  const { data: chats = [] } = useQuery({
+  const { data: chats = [], isLoading: isLoadingChats } = useQuery({
     queryKey: ['chats'],
     queryFn: chatService.getChats,
   });
 
-  const { data: uploadedFiles = [] } = useQuery({
+  const { data: uploadedFiles = [], isLoading: isLoadingFiles } = useQuery({
     queryKey: ['files'],
     queryFn: filesService.listFiles,
   });
@@ -94,7 +94,12 @@ export const Sidebar = () => {
             <span className="text-[11px] font-bold text-[#10A37F] bg-[#e8f5e9] px-1.5 py-0.5 rounded-full">{uploadedFiles.length}</span>
           </div>
           <div className="space-y-0.5">
-            {uploadedFiles.slice(0, 3).map((file: any) => (
+            {isLoadingFiles ? (
+              <div className="py-2 space-y-3 px-3">
+                <div className="h-3 bg-[#f0f0f0] rounded w-3/4 animate-pulse" />
+                <div className="h-3 bg-[#f0f0f0] rounded w-5/6 animate-pulse" />
+              </div>
+            ) : uploadedFiles.slice(0, 3).map((file: any) => (
               <div
                 key={file.id}
                 className="btn-sidebar-item text-[#666] hover:bg-[#f0f0f0] cursor-default group"
@@ -120,10 +125,25 @@ export const Sidebar = () => {
             <span className="text-[12px] font-semibold text-[#666] uppercase tracking-[0.5px]">Recent Sessions</span>
           </div>
           <div className="space-y-0.5">
-            {chats.length === 0 ? (
+            {isLoadingChats ? (
+              <div className="py-4 space-y-4 px-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-sm bg-[#f0f0f0] animate-pulse shrink-0" />
+                  <div className="h-3.5 bg-[#f0f0f0] rounded w-5/6 animate-pulse" />
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-sm bg-[#f0f0f0] animate-pulse shrink-0" />
+                  <div className="h-3.5 bg-[#f0f0f0] rounded w-2/3 animate-pulse" />
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-sm bg-[#f0f0f0] animate-pulse shrink-0" />
+                  <div className="h-3.5 bg-[#f0f0f0] rounded w-3/4 animate-pulse" />
+                </div>
+              </div>
+            ) : chats.length === 0 ? (
               <div className="py-8 flex flex-col items-center justify-center text-center">
-                <MessageSquare className="w-8 h-8 text-[#e5e5e5] mb-2" />
-                <p className="text-[14px] font-semibold text-[#333]">No chats yet</p>
+                <MessageSquare className="w-8 h-8 text-[#f0f0f0] mb-2" />
+                <p className="text-[14px] font-semibold text-[#888]">No chats yet</p>
                 <p className="text-[11px] text-[#a8a8a8]">Start a new chat to begin</p>
               </div>
             ) : (

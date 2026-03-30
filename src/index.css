@@ -53,6 +53,10 @@
     @apply bg-[#10A37F] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#0e8a6c] active:scale-[0.98] transition-all;
   }
 
+  .btn-sidebar-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-200 cursor-pointer w-full text-left;
+  }
+
   /* Status ALERTS */
   .alert-success {
     @apply bg-[#e8f5e9] border border-[#4caf50] text-[#2e7d32] px-4 py-3 rounded-lg text-[13px] font-medium;
