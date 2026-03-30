@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+:root {
+  /* IntelliDocs Phase 2.1 Design System (Color Injected) */
+  --color-emerald: #10A37F;
+  --color-emerald-light: #e8f5e9;
+  --color-emerald-border: #4caf50;
+  --color-emerald-text: #2e7d32;
+  
+  --color-red: #dc3545;
+  --color-red-light: #fee;
+  
+  --color-black: #000000;
+  --color-dark-gray: #1a1a1a;
+  --color-medium-gray: #666666;
+  --color-light-gray: #a8a8a8;
+  --color-off-white: #f8f8f8;
+  --color-light-border: #e5e5e5;
+  --color-very-light-bg: #f0f0f0;
+  --color-border-gray: #cccccc;
+  
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+
+  --shadow-subtle: 0px 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-premium: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@layer base {
+  * {
+    font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    @apply transition-all duration-200 ease-in-out;
+  }
+  
+  body {
+    @apply bg-white text-black antialiased overflow-hidden;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+@layer components {
+  /* Claude-inspired Buttons with Emerald Injection */
+  .btn-new-chat {
+    @apply bg-black text-white px-4 py-4 rounded-lg text-[14px] font-semibold hover:bg-[#1a1a1a] active:scale-[0.98] transition-all flex items-center justify-center gap-2 w-full shadow-sm;
+  }
+
+  .btn-accent {
+    @apply bg-[#10A37F] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#0e8a6c] active:scale-[0.98] transition-all;
+  }
+
+  /* Status ALERTS */
+  .alert-success {
+    @apply bg-[#e8f5e9] border border-[#4caf50] text-[#2e7d32] px-4 py-3 rounded-lg text-[13px] font-medium animate-fade-in;
+  }
+
+  .alert-error {
+    @apply bg-[#fee] border border-[#dc3545] text-[#dc3545] px-4 py-3 rounded-lg text-[13px] font-medium animate-fade-in;
+  }
+
+  /* Chat Interface Bubbles */
+  .bubble-user {
+    @apply bg-black text-white rounded-xl px-4 py-3 max-w-[70%] ml-auto text-[14px] leading-relaxed;
+  }
+
+  .bubble-assistant {
+    @apply bg-[#f0f0f0] text-black rounded-xl px-4 py-3 max-w-full mr-auto text-[14px] leading-relaxed;
+  }
+
+  /* Source File Badge */
+  .source-badge {
+    @apply flex items-center gap-2 px-2.5 py-2 bg-[#fafafa] border border-[#e5e5e5] border-l-[3px] border-l-[#10A37F] rounded-r-md text-[11px] text-[#666] mb-3;
+  }
+
+  /* Thinking Animation */
+  .loading-dot {
+    @apply w-2 h-2 bg-[#10A37F] rounded-full;
+    animation: bounce 1.4s infinite ease-in-out both;
+  }
+}
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 1; }
+  40% { transform: translateY(-8px); opacity: 0.7; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: #e5e5e5; border-radius: 9999px; }
