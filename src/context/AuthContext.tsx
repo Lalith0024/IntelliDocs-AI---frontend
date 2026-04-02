@@ -23,12 +23,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const initAuth = async () => {
       const token = localStorage.getItem('access_token');
+      console.log(`[Auth] Initializing with API: ${authService.me ? "Connected" : "Disconnected"} at ${import.meta.env.VITE_API_URL || 'localhost'}`);
+      
       if (token) {
         try {
           const userData = await authService.me();
           setUser(userData);
         } catch (error) {
-          console.error("Auth init failed", error);
+          console.error("[Auth] Initial session check failed:", error);
           localStorage.removeItem('access_token');
         }
       }
