@@ -103,6 +103,29 @@
   animation: fade-in 0.3s ease-out forwards;
 }
 
-::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background-color: #e5e5e5; border-radius: 9999px; }
+::-webkit-scrollbar-thumb { background-color: #d4d4d4; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background-color: #a8a8a8; }
+
+@layer utilities {
+  .prose-premium {
+    @apply text-[15px] leading-[1.6] tracking-[-0.01em];
+  }
+  
+  .prose-premium p {
+    @apply mb-4 last:mb-0;
+  }
+  
+  .prose-premium h1, .prose-premium h2, .prose-premium h3 {
+    @apply mt-6 mb-3 font-semibold tracking-tight;
+  }
+  
+  .prose-premium code {
+    @apply font-mono text-[13.5px] bg-[#f0f0f0] px-1.5 py-0.5 rounded-md;
+  }
+  
+  .prose-premium pre code {
+    @apply bg-transparent px-0 py-0 text-white rounded-none;
+  }
+}

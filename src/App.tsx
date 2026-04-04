@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Home } from './pages/Home';
@@ -7,6 +8,7 @@ import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ErrorProvider } from './context/ErrorContext';
+import { ArtifactProvider } from './context/ArtifactContext';
 import { Loader2 } from 'lucide-react';
 import './App.css';
 
@@ -32,6 +34,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 const AppContent = () => {
   const { user, loading } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   if (loading) {
     return (
@@ -47,10 +50,10 @@ const AppContent = () => {
   }
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden text-black font-sans">
-      {user && <Sidebar />}
-      <main className="flex-1 flex flex-col h-full overflow-hidden absolute inset-0 sm:relative">
-        {user && <Header />}
+    <div className="flex h-screen bg-white overflow-hidden text-black font-sans relative">
+      {user && <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />}
+      <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+        {user && <Header onToggleSidebar={() => setIsSidebarOpen(true)} />}
         <div className="flex-1 overflow-hidden relative">
           <Routes>
             <Route path="/login" element={<Login mode="login" />} />
@@ -70,9 +73,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ErrorProvider>
         <AuthProvider>
-          <BrowserRouter>
-            <AppContent />
-          </BrowserRouter>
+          <ArtifactProvider>
+            <BrowserRouter>
+              <AppContent />
+            </BrowserRouter>
+          </ArtifactProvider>
         </AuthProvider>
       </ErrorProvider>
     </QueryClientProvider>

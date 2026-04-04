@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const initAuth = async () => {
       const token = localStorage.getItem('access_token');
-      console.log(`[Auth] Initializing with API: ${authService.me ? "Connected" : "Disconnected"} at ${import.meta.env.VITE_API_URL || 'localhost'}`);
+      console.log(`[Auth] Initializing with API: ${typeof authService.me === 'function' ? "Ready" : "Disconnected"} at ${import.meta.env.VITE_API_URL || 'localhost'}`);
       
       if (token) {
         try {
