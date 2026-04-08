@@ -21,13 +21,12 @@ const getInitialOnboardingState = () => {
 
 export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   const initialState = getInitialOnboardingState();
-  const [showOnboarding, setShowOnboarding] = useState(initialState.shouldShow);
+  const [showOnboarding, setShowOnboarding] = useState(false); // Start with false, don't auto-show
   const [isOnboardingComplete, setIsOnboardingComplete] = useState(initialState.isComplete);
   const { user } = useAuth();
   const lastUserIdRef = useRef<string | null>(null);
 
-  // When user changes (new login/signup), check if onboarding should show
-  // Note: Setting state in effect is safe here as it's detecting user changes
+  // When user changes, update their completion status but DON'T auto-trigger onboarding
   useEffect(() => {
     if (!user) {
       // Clear ref when user logs out
@@ -42,7 +41,7 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
       
       lastUserIdRef.current = user.id;
       setIsOnboardingComplete(hasCompleted);
-      setShowOnboarding(!hasCompleted); // Show if not completed
+      // Don't auto-show - let Login component control it via triggerOnboarding()
     }
   }, [user]);
 

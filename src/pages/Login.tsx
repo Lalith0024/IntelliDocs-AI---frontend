@@ -24,11 +24,15 @@ export const Login = ({ mode = 'login' }: { mode?: 'login' | 'signup' }) => {
 
   useEffect(() => {
     if (user) {
-      // Trigger onboarding for first-time users
-      triggerOnboarding();
+      // Only trigger onboarding for NEW signups, not regular logins
+      // Check if this is a fresh signup by looking for the flag
+      if (isSignUP && localStorage.getItem('just_signed_up') === 'true') {
+        triggerOnboarding();
+        localStorage.removeItem('just_signed_up');
+      }
       navigate('/', { replace: true });
     }
-  }, [user, navigate, triggerOnboarding]);
+  }, [user, navigate, triggerOnboarding, isSignUP]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +56,8 @@ export const Login = ({ mode = 'login' }: { mode?: 'login' | 'signup' }) => {
       if (isSignUP) {
         // Signup returns token directly now
         const data = await authService.signup(email, password);
+        // Set flag to show onboarding after signup
+        localStorage.setItem('just_signed_up', 'true');
         await login(data.access_token);
       } else {
         const data = await authService.login(email, password);
