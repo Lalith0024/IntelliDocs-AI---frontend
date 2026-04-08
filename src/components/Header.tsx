@@ -1,5 +1,6 @@
-import { Menu } from 'lucide-react';
+import { Menu, HelpCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useOnboarding } from '../hooks/useOnboarding';
 
 interface HeaderProps {
   onToggleSidebar?: () => void;
@@ -7,6 +8,7 @@ interface HeaderProps {
 
 export const Header = ({ onToggleSidebar }: HeaderProps) => {
   const { user } = useAuth();
+  const { setShowOnboarding } = useOnboarding();
   const userName = user?.email?.split('@')[0] || 'demo';
 
   return (
@@ -28,6 +30,13 @@ export const Header = ({ onToggleSidebar }: HeaderProps) => {
 
       {/* RIGHT: User Context & Role */}
       <div className="flex items-center gap-4">
+         <button
+           onClick={() => setShowOnboarding(true)}
+           className="w-9 h-9 rounded-full hover:bg-[#f0f0f0] flex items-center justify-center text-[#666] hover:text-black transition-all"
+           title="Replay tutorial"
+         >
+           <HelpCircle className="w-5 h-5" />
+         </button>
          <div className="text-right hidden sm:flex flex-col border-r-[2.5px] border-r-[#10A37F] pr-3">
             <span className="text-[14px] font-semibold text-black leading-tight">{userName}</span>
             <span className="text-[10px] font-bold text-[#10A37F] uppercase tracking-[0.15em] mt-0.5">Primary Operator</span>

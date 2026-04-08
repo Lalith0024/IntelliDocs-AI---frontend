@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useOnboarding } from '../hooks/useOnboarding';
 import { authService } from '../services/api';
 import { ArrowRight, ShieldCheck, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -13,6 +14,7 @@ export const Login = ({ mode = 'login' }: { mode?: 'login' | 'signup' }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { user, login } = useAuth();
+  const { triggerOnboarding } = useOnboarding();
   const navigate = useNavigate();
 
   // Update state if mode prop changes
@@ -22,9 +24,11 @@ export const Login = ({ mode = 'login' }: { mode?: 'login' | 'signup' }) => {
 
   useEffect(() => {
     if (user) {
+      // Trigger onboarding for first-time users
+      triggerOnboarding();
       navigate('/', { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, navigate, triggerOnboarding]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,9 +57,15 @@ export const Login = ({ mode = 'login' }: { mode?: 'login' | 'signup' }) => {
         const data = await authService.login(email, password);
         await login(data.access_token);
       }
-    } catch (err: any) {
-      // Extract meaningful message
-      const msg = err.response?.data?.detail || err.message || 'Authentication failed.';
+    } catch (err) {
+      // Extract meaningful message from error
+      let msg = 'Authentication failed.';
+      if (err instanceof Error) {
+        msg = err.message;
+      } else if (typeof err === 'object' && err !== null && 'response' in err) {
+        const detail = (err as { response?: { data?: { detail?: string } } }).response?.data?.detail;
+        msg = detail || msg;
+      }
       setError(msg);
     } finally {
       setLoading(false);

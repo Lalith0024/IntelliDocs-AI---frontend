@@ -6,9 +6,11 @@ import { Documents } from './pages/Documents';
 import { Login } from './pages/Login';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
+import { OnboardingModal } from './components/OnboardingModal';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ErrorProvider } from './context/ErrorContext';
 import { ArtifactProvider } from './context/ArtifactContext';
+import { OnboardingProvider } from './context/OnboardingContext';
 import { Loader2 } from 'lucide-react';
 import './App.css';
 
@@ -64,6 +66,7 @@ const AppContent = () => {
           </Routes>
         </div>
       </main>
+      <OnboardingModal />
     </div>
   );
 }
@@ -74,9 +77,11 @@ function App() {
       <ErrorProvider>
         <AuthProvider>
           <ArtifactProvider>
-            <BrowserRouter>
-              <AppContent />
-            </BrowserRouter>
+            <OnboardingProvider>
+              <BrowserRouter>
+                <AppContent />
+              </BrowserRouter>
+            </OnboardingProvider>
           </ArtifactProvider>
         </AuthProvider>
       </ErrorProvider>
